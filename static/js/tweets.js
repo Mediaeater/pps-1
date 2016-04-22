@@ -17,7 +17,7 @@ function show_prev_tweet()
     // probs too easy to miss?
     hide(tweets[index--]);
     
-    // reset to the first tweet
+    // reset to the last tweet
     if (index == -1)
         index = tweets.length-1;
 
@@ -57,6 +57,7 @@ document.onkeydown = function(e) {
 
 function hide(el)
 {
+    el.classList.add('fadeOut');
     el.classList.add('hidden');
 }
 
