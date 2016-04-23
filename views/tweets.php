@@ -21,12 +21,13 @@ $apos_pattern = "/(\w+)'(\w+)/";
         $text = preg_replace($tco_pattern, '', $text);
         // replace dumb apostrophes with smart ones
         $text = preg_replace($apos_pattern, "$1’$2", $text);
+        $author = $users->{$t->user->id}->screen_name;
         
         $dt = $t->created_at;
         $dt = strtotime($dt);
         $date = date($date_fmt, $dt);
         $time = date($time_fmt, $dt);
-        $ts = $date." at ".$time;
+        $ts = "(@$author) $date at $time";
         
         $media = $t->entities->media[0];
         
@@ -40,8 +41,8 @@ $apos_pattern = "/(\w+)'(\w+)/";
         }
             ?><div class="text"><? 
                 echo $text; 
-            ?></div><?
-            ?><div class="time"><?
+            ?></div>
+            <div class="time"><?
                 echo $ts;
             ?></div>
         </figure><?
@@ -52,6 +53,9 @@ $apos_pattern = "/(\w+)'(\w+)/";
             <div class="media">
                 <img src="<? echo $media->media_url; ?>">
             </div>
+            <div class="time"><?
+                echo $ts;
+            ?></div>
         </figure>
         <?
         }
