@@ -54,12 +54,24 @@ class pps_tweeter
         $result = $this->conn->post("statuses/update", $parameters);
     }
     
-    function get_tweets($tid)
+    function get_tweets($stream_id, 
+                        $count=null,
+                        $max_pos=null,
+                        $min_pos=null)
     {
         $parameters = [
-            "id" => $tid
+                'id' => $stream_id
         ];
         
+        if (isset($count))
+            $parameters['count'] = $count;
+        if (isset($max_pos))
+            $parameters['max_position'] = $max_pos;
+        if (isset($min_pos))
+            $parameters['min_position'] = $min_pos;
+        
+        
+        // file_put_contents("out.txt", print_r($parameters, true));
         $result = $this->conn->get("collections/entries", $parameters);
         
         return $result;
