@@ -61,7 +61,11 @@ $apos_pattern = "/(\w+)'(\w+)/";
         }
         $show = false;
     }
+
+?><section id="tweets-display"><?
 ?></section>
+
+
 <script type="text/javascript" src="static/js/tweets.js"></script>
 <script type="text/javascript">
     var tweets = document.getElementsByClassName("tweet");
