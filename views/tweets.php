@@ -14,9 +14,10 @@ require_once("views/tweets-ajax.php");
     var max = "<? echo $max; ?>";
     console.log(max);
     
+    /*
     ajax_interval = setInterval(function() {
         get_tweets(max);
     }, ajax_duration);
-
+    */
     tweet_interval = setInterval(show_next_tweet, tweet_duration);
 </script>

@@ -11,6 +11,21 @@ function show_next_tweet()
     show(tweets[index]);
 }
 
+function show_next_tweet_a()
+{
+    hide(tweets[index++]);
+    
+    // reset to the first tweet
+    if (index == tweets.length)
+        index = 0;
+    tweet = tweets[index];
+    show(tweet);
+
+    add_spans(tweet);
+    ti = 0;
+    display_spans_in_order(tweet);
+}
+
 function show_prev_tweet()
 {
     // is it bad to increment index here?
@@ -48,7 +63,7 @@ document.onkeydown = function(e) {
             show_prev_tweet();
         break;
         case 39: // right
-            show_next_tweet();
+            show_next_tweet_a();
         break;
         default: return; // exit this handler for other keys
     }

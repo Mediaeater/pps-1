@@ -14,5 +14,6 @@ $uri = explode('/', $_SERVER['REQUEST_URI']);
         {
         ?><link rel="stylesheet" type="text/css" media="all" href="static/css/fade-in-out.css"><?
         }
+		?><script type="text/javascript" src="static/js/animateMessage.js"></script><?
     ?></head>
     <body>

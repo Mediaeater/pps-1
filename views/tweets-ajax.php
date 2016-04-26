@@ -4,8 +4,8 @@ require_once(__DIR__."/../lib/pps_tweeter.php");
 
 $max_old = $_GET["max"];
 
-$date_fmt = "l, d F Y";
-$time_fmt = "H.i.s";
+$date_fmt = "YMd";
+$time_fmt = "H:i:s";
 
 $stream_id = "custom-723521388947116032";
 $tweeter = new pps_tweeter();
@@ -58,7 +58,8 @@ foreach($timeline as $l)
     $dt = strtotime($dt);
     $date = date($date_fmt, $dt);
     $time = date($time_fmt, $dt);
-    $ts = "(@$author) $date at $time";
+    // $ts = "(@$author) $date at $time";
+    $ts = $time;
     
     $media = $t->entities->media[0];
     
