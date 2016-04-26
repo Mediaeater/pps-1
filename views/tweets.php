@@ -16,12 +16,12 @@ require_once("views/tweets-ajax.php");
     console.log(max);
     
     // show first tweet
-    var ticker_delay = 50;
+    var ticker_delay = 200;
     var tweet = tweets[0];
     show(tweet);
-    add_spans(tweet);
+    add_spans(tweet, alphabetical_classes);
     ti = 0;
-    display_spans_in_order(tweet);
+    alphabetical_animate(tweet, ticker_delay);
     
     /*
     ajax_interval = setInterval(function() {

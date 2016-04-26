@@ -170,7 +170,23 @@ function checkCookie(name)
 */
 var ti = 0;
 
-function add_spans(el)
+function in_order_classes(s)
+{
+    s.classList.add("invisible");
+}
+
+function alphabetical_classes(s)
+{
+    c = s.textContent.toLowerCase();
+    if (LETTERS.indexOf(c) >= 0)
+        s.classList.add(c);
+    else
+        s.classList.add("punct");
+    s.classList.add("invisible");
+}
+
+
+function add_spans(el, class_func)
 {
     var cns = el.childNodes;
     
@@ -178,7 +194,6 @@ function add_spans(el)
     if(cns.length == 1 && cns[0].nodeType == 3)
     {
         var text = el.textContent;
-        var classes = text.toLowerCase();
         
         // i suppose this while loop is unnecessary
         // as we know that el only has one child? 
@@ -189,13 +204,7 @@ function add_spans(el)
         {
             var s = document.createElement("span");
             s.textContent = text[i];
-
-            if (LETTERS.indexOf(classes[i]) >= 0)
-                s.classList.add(classes[i]);
-            else
-                s.classList.add("punct");
-            s.classList.add("invisible");
-
+            class_func(s);
             el.appendChild(s);
         }
         
@@ -207,35 +216,46 @@ function add_spans(el)
         for (var i = 0; i < cns.length; i++)
         {
             if(cns[i].nodeType == 1)
-                add_spans(cns[i]);
+                add_spans(cns[i], class_func);
         }
     }
 }
 
-var oi = 0;
 
-function display_spans_in_order(el, delay)
+function remove_spans(el)
+{
+    
+}
+
+function in_order_animate(el, delay)
 {
     if (delay === undefined)
         delay = 50;
     var els = el.getElementsByClassName("invisible");
     setTimeout(function() {
-        els[oi].classList.remove("invisible");
-        if(oi < els.length)
-            display_spans_in_order(el, delay);
+        els[0].classList.remove("invisible");
+        if(els.length > 0)
+            in_order_animate(el, delay);
     }, delay);
 }
 
-function display_spans(el, delay)
+function alphabetical_animate(el, delay)
 {
-    if (!delay)
+    if (delay === undefined)
         delay = 50;
     var els;
+    
     setTimeout(function() {
-        els = el.getElementsByClassName(LETTERS[ti++]);
-        show_invisibles(els);
         if (ti < LETTERS.length)
-            display_spans(el, delay);
+            els = el.getElementsByClassName(LETTERS[ti++]);
+        else
+        {
+            els = el.getElementsByClassName("punct");
+            ti++;
+        }
+        show_invisibles(els);
+        if (ti <= LETTERS.length)
+            alphabetical_animate(el, delay);
     }, delay);
 }
 
