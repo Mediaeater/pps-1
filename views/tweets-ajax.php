@@ -8,6 +8,7 @@ $date_fmt = "YMd";
 $time_fmt = "H:i:s";
 
 $stream_id = "custom-723521388947116032";
+// $stream_id = "custom-721307714391920640";
 $tweeter = new pps_tweeter();
 $data = $tweeter->get_tweets($stream_id);
 
@@ -19,7 +20,7 @@ $timeline = array_reverse($data->response->timeline);
 $tweets = $data->objects->tweets;
 $users = $data->objects->users;
 
-$tco_pattern = '/https:\/\/t\.co\/.*/';
+$tco_pattern = '/https?:\/\/t\.co\/.*/';
 $apos_pattern = "/(\w+)'(\w+)/";
 $rquot_pattern = '/(?<=[\w,.?!…\)]|^)"/';
 $lquot_pattern = '/"(?=\w|$)/';
@@ -64,6 +65,12 @@ foreach($timeline as $l)
     $media = $t->entities->media[0];
     
     ?><figure class="animated fadeIn tweet hidden"><?
+        if($media)
+        {
+        ?><div class="media">
+            <img src="<? echo $media->media_url; ?>"/>
+        </div><?
+        }
         ?><div class="text"><? 
             echo $text; 
         ?></div>
@@ -71,18 +78,5 @@ foreach($timeline as $l)
             echo $ts;
         ?></div>
     </figure><?
-    
-    if($media)
-    {
-    ?><figure class="animated fadeIn tweet hidden">
-        <div class="media">
-            <img src="<? echo $media->media_url; ?>"/>
-        </div>
-        <div class="time"><?
-            echo $ts;
-        ?></div>
-    </figure>
-    <?
-    }
 }
 ?></section>

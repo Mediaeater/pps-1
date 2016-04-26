@@ -213,8 +213,11 @@ function add_spans(el)
 }
 
 var oi = 0;
-function display_spans_in_order(el = document, delay = 50)
+
+function display_spans_in_order(el, delay)
 {
+    if (delay === undefined)
+        delay = 50;
     var els = el.getElementsByClassName("invisible");
     setTimeout(function() {
         els[oi].classList.remove("invisible");
@@ -223,8 +226,10 @@ function display_spans_in_order(el = document, delay = 50)
     }, delay);
 }
 
-function display_spans(el = document, delay = 50)
+function display_spans(el, delay)
 {
+    if (!delay)
+        delay = 50;
     var els;
     setTimeout(function() {
         els = el.getElementsByClassName(LETTERS[ti++]);
