@@ -169,15 +169,18 @@ function checkCookie(name)
 /* 
 */
 
-function init_animation(delay, class_func, animate_func)
+function init_animation(info)
 {
     var tweet = tweets[index];
     show(tweet);
-    add_spans(tweet, class_func);
-    ti = 0;
-    animate_func(tweet, animation_delay);
     
-    tweet_interval = setInterval(show_next_tweet_a, tweet_duration);
+    add_spans(tweet, info.class_func);
+    ti = 0;
+    info.animate_func(tweet, info.delay);
+    
+    tweet_interval = setInterval(function() {
+        show_next_tweet_a(info)
+    }, tweet_duration);
 }
 
 function add_spans(el, class_func)
@@ -185,7 +188,7 @@ function add_spans(el, class_func)
     var cns = el.childNodes;
     
     // base case
-    if(cns.length == 1 && cns[0].nodeType == 3)
+    if (cns.length == 1 && cns[0].nodeType == 3)
     {
         var text = el.textContent;
         

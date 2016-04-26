@@ -11,7 +11,7 @@ function show_next_tweet()
     show(tweets[index]);
 }
 
-function show_next_tweet_a()
+function show_next_tweet_a(info)
 {
     hide(tweets[index++]);
     
@@ -21,9 +21,9 @@ function show_next_tweet_a()
     tweet = tweets[index];
     show(tweet);
 
-    add_spans(tweet, class_func);
+    add_spans(tweet, info.class_func);
     ti = 0;
-    animate_func(tweet, animation_delay);
+    info.animate_func(tweet, info.delay);
 }
 
 function show_prev_tweet()
@@ -63,7 +63,7 @@ document.onkeydown = function(e) {
             show_prev_tweet();
         break;
         case 39: // right
-            show_next_tweet_a();
+            show_next_tweet_a(info[animation_style]);
         break;
         default: return; // exit this handler for other keys
     }
