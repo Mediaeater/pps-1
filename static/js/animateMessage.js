@@ -168,23 +168,17 @@ function checkCookie(name)
 
 /* 
 */
-var ti = 0;
 
-function in_order_classes(s)
+function init_animation(delay, class_func, animate_func)
 {
-    s.classList.add("invisible");
+    var tweet = tweets[index];
+    show(tweet);
+    add_spans(tweet, class_func);
+    ti = 0;
+    animate_func(tweet, animation_delay);
+    
+    tweet_interval = setInterval(show_next_tweet_a, tweet_duration);
 }
-
-function alphabetical_classes(s)
-{
-    c = s.textContent.toLowerCase();
-    if (LETTERS.indexOf(c) >= 0)
-        s.classList.add(c);
-    else
-        s.classList.add("punct");
-    s.classList.add("invisible");
-}
-
 
 function add_spans(el, class_func)
 {
@@ -207,9 +201,6 @@ function add_spans(el, class_func)
             class_func(s);
             el.appendChild(s);
         }
-        
-        // is this return necessary?
-        return 0;
     }
     else
     {
@@ -227,6 +218,11 @@ function remove_spans(el)
     
 }
 
+function in_order_classes(s)
+{
+    s.classList.add("invisible");
+}
+
 function in_order_animate(el, delay)
 {
     if (delay === undefined)
@@ -239,6 +235,18 @@ function in_order_animate(el, delay)
     }, delay);
 }
 
+function alphabetical_classes(s)
+{
+    c = s.textContent.toLowerCase();
+    if (LETTERS.indexOf(c) >= 0)
+        s.classList.add(c);
+    else
+        s.classList.add("punct");
+    s.classList.add("invisible");
+}
+
+var ti = 0;
+
 function alphabetical_animate(el, delay)
 {
     if (delay === undefined)
@@ -248,8 +256,7 @@ function alphabetical_animate(el, delay)
     setTimeout(function() {
         if (ti < LETTERS.length)
             els = el.getElementsByClassName(LETTERS[ti++]);
-        else
-        {
+        else {
             els = el.getElementsByClassName("punct");
             ti++;
         }

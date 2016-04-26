@@ -21,9 +21,9 @@ function show_next_tweet_a()
     tweet = tweets[index];
     show(tweet);
 
-    add_spans(tweet, alphabetical_classes);
+    add_spans(tweet, class_func);
     ti = 0;
-    alphabetical_animate(tweet, ticker_delay);
+    animate_func(tweet, animation_delay);
 }
 
 function show_prev_tweet()

@@ -12,21 +12,33 @@ require_once("views/tweets-ajax.php");
     var ajax_duration = 1000;
     var ajax_interval;
     
-    var max = "<? echo $max; ?>";
-    console.log(max);
+    // TODO: make this an array
+    var animation_style = "in_order";
+    // var animation_style = "alphabetical";
+    var animation_delay = 50;
     
+    var class_func = animation_style + "_classes";
+    class_func = window[class_func];
+    var animate_func = animation_style + "_animate";
+    animate_func = window[animate_func];
+      
+    init_animation(animation_delay, class_func, animate_func);
     // show first tweet
-    var ticker_delay = 200;
+    
+    //
+    /*
     var tweet = tweets[0];
     show(tweet);
     add_spans(tweet, alphabetical_classes);
     ti = 0;
-    alphabetical_animate(tweet, ticker_delay);
-    
+    alphabetical_animate(tweet, animation_delay);
+    */
     /*
     ajax_interval = setInterval(function() {
         get_tweets(max);
     }, ajax_duration);
     */
+    /*
     tweet_interval = setInterval(show_next_tweet_a, tweet_duration);
+    */
 </script>
