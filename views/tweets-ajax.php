@@ -40,7 +40,7 @@ foreach($timeline as $l)
     $time = date(TIME_FMT, $dt);
     $ts = $time;
     
-    ?><figure class="animated fadeIn tweet hidden"><?
+    ?><figure class="tweet hidden"><?
         if($media = $t->entities->media[0])
         {
         ?><div class="media">

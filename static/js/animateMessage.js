@@ -272,5 +272,8 @@ function alphabetical_animate(el, delay)
 function show_invisibles(elements)
 {
     for (var i = 0; i < elements.length; i++)
+    {
+        elements[i].classList.add("animated", "fadeIn");
         elements[i].classList.remove("invisible");
+    }
 }
