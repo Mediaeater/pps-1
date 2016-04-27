@@ -188,6 +188,8 @@ function add_spans(el, class_func)
     var cns = el.childNodes;
     
     // base case
+    // TODO: make sure this isn't a "SCRIPT" tag
+    // (or style tag or. . . )
     if (cns.length == 1 && cns[0].nodeType == 3)
     {
         var text = el.textContent;
@@ -209,7 +211,7 @@ function add_spans(el, class_func)
     {
         for (var i = 0; i < cns.length; i++)
         {
-            if(cns[i].nodeType == 1)
+            if(cns[i].nodeType == 1 && cns[i].tagName != "SCRIPT")
                 add_spans(cns[i], class_func);
         }
     }
@@ -223,16 +225,16 @@ function remove_spans(el)
 
 function in_order_classes(s)
 {
-    s.classList.add("invisible");
+    s.classList.add("hidden");
 }
 
 function in_order_animate(el, delay)
 {
     if (delay === undefined)
         delay = 50;
-    var els = el.getElementsByClassName("invisible");
+    var els = el.getElementsByClassName("hidden");
     setTimeout(function() {
-        els[0].classList.remove("invisible");
+        els[0].classList.remove("hidden");
         if(els.length > 0)
             in_order_animate(el, delay);
     }, delay);
