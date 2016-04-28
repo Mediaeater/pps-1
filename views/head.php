@@ -1,5 +1,8 @@
 <?
 $uri = explode('/', $_SERVER['REQUEST_URI']);
+$type = $uri[2];
+if (!$type)
+    $type = "plain";
 ?><!DOCTYPE html>
 <html>
     <head>

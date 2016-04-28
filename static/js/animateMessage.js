@@ -171,13 +171,9 @@ function checkCookie(name)
 
 function init_animation(info)
 {
-    var tweet = tweets[index];
-    var text = tweet.getElementsByClassName("text")[0];
-    show(tweet);
-    
-    add_spans(text, info.class_func);
-    ti = 0;
-    info.animate_func(text, info.delay);
+    show(tweets[index]);
+    if (info.use_spans)
+        show_tweet(index, info);
     
     tweet_interval = setInterval(function() {
         show_next_tweet_a(info)

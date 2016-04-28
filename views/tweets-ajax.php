@@ -40,14 +40,14 @@ foreach($timeline as $l)
     $time = date(TIME_FMT, $dt);
     $ts = $time;
     
-    ?><figure class="tweet hidden"><?
+    ?><figure class="animated tweet fadeIn hidden"><?
         ?><div class="text"><? echo $text; ?></div>
         <div class="time"><? echo $t->created_at; ?></div>
     </figure><?
     $i = 0;
     while($media = $t->entities->media[$i++])
     {
-    ?><figure class="tweet hidden">
+    ?><figure class="animated tweet fadeIn hidden">
         <div class="media">
             <img src="<? echo $media->media_url; ?>"/>
         </div>

@@ -100,8 +100,13 @@ function init_clock(canvasId, a_pos, show_hands)
             draw_clock();
         else
             draw_blank_clock();
-    };
-    
+    };  
+}
+
+function set_time(canvasId, a_pos, d)
+{
+    draw_blank_clock();
+    draw_hands(d);
 }
 
 function draw_blank_clock()
