@@ -172,11 +172,12 @@ function checkCookie(name)
 function init_animation(info)
 {
     var tweet = tweets[index];
+    var text = tweet.getElementsByClassName("text")[0];
     show(tweet);
     
-    add_spans(tweet, info.class_func);
+    add_spans(text, info.class_func);
     ti = 0;
-    info.animate_func(tweet, info.delay);
+    info.animate_func(text, info.delay);
     
     tweet_interval = setInterval(function() {
         show_next_tweet_a(info)
@@ -185,7 +186,13 @@ function init_animation(info)
 
 function add_spans(el, class_func)
 {
-    var cns = el.childNodes;
+    var cns;
+    
+    // check inputs
+    if (el === undefined)
+        return;
+    
+    cns = el.childNodes;
     
     // base case
     // TODO: make sure this isn't a "SCRIPT" tag
@@ -199,10 +206,11 @@ function add_spans(el, class_func)
         while (el.firstChild)
             el.removeChild(el.firstChild);
         
+        text = split_by_symbol(text);
         for (var i = 0; i < text.length; i++)
         {
             var s = document.createElement("span");
-            s.textContent = text[i];
+            s.innerHTML = text[i];
             class_func(s);
             el.appendChild(s);
         }
@@ -217,12 +225,82 @@ function add_spans(el, class_func)
     }
 }
 
+// javascript + unicode = sadness
+// https://mathiasbynens.be/notes/javascript-unicode
+// this function takes a string and returns an array of unicode symbols
+function split_by_symbol(string)
+{
+    var index = 0;
+	var length = string.length;
+	var output = [];
+	for (; index < length - 1; ++index) {
+		var charCode = string.charCodeAt(index);
+		if (charCode >= 0xD800 && charCode <= 0xDBFF) {
+			charCode = string.charCodeAt(index + 1);
+			if (charCode >= 0xDC00 && charCode <= 0xDFFF) {
+				output.push(string.slice(index, index + 2));
+				++index;
+				continue;
+			}
+		}
+		output.push(string.charAt(index));
+	}
+	output.push(string.charAt(index));
+	return output;    
+}
+
 
 function remove_spans(el)
 {
-    
+
 }
 
+function random_classes(s)
+{
+    s.classList.add("invisible");
+}
+
+function random_animate(el, delay)
+{
+    var random_index, els;
+    
+    // check inputs
+    if (el === undefined)
+        return; 
+    if (delay === undefined)
+        delay = 50;
+
+    els = el.getElementsByClassName("invisible");
+    random_index = Math.floor(Math.random() * els.length);
+    setTimeout(function() {
+        if (els[random_index] !== undefined)
+        {
+            els[random_index].classList.remove("invisible");
+            if (els.length > 0)
+                random_animate(el, delay);
+        }
+    }, delay); 
+}
+
+function shuffle(array)
+{
+    var current_index = array.length;
+    var temp, random_index;
+    
+    while (0 !== current_index)
+    {
+        // pick a remaining element. . . 
+        random_index = Math.floor(Math.random() * current_index);
+        current_index--;
+        
+        // . . . and swap it with the current element.
+        temp = array[current_index];
+        array[current_index] = array[random_index];
+        array[random_index] = temp;
+    }
+    
+    return array;
+}
 function in_order_classes(s)
 {
     s.classList.add("hidden");
@@ -234,9 +312,12 @@ function in_order_animate(el, delay)
         delay = 50;
     var els = el.getElementsByClassName("hidden");
     setTimeout(function() {
-        els[0].classList.remove("hidden");
-        if(els.length > 0)
-            in_order_animate(el, delay);
+        if (els[0] !== undefined)
+        {
+            els[0].classList.remove("hidden");
+            if(els.length > 0)
+                in_order_animate(el, delay);
+        }
     }, delay);
 }
 

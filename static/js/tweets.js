@@ -13,17 +13,19 @@ function show_next_tweet()
 
 function show_next_tweet_a(info)
 {
+    var text;
     hide(tweets[index++]);
     
     // reset to the first tweet
     if (index == tweets.length)
         index = 0;
     tweet = tweets[index];
+    text = tweet.getElementsByClassName("text")[0];
     show(tweet);
 
-    add_spans(tweet, info.class_func);
+    add_spans(text, info.class_func);
     ti = 0;
-    info.animate_func(tweet, info.delay);
+    info.animate_func(text, info.delay);
 }
 
 function show_prev_tweet()

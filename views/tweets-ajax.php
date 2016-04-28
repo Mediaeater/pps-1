@@ -41,14 +41,18 @@ foreach($timeline as $l)
     $ts = $time;
     
     ?><figure class="tweet hidden"><?
-        if($media = $t->entities->media[0])
-        {
-        ?><div class="media">
-            <img src="<? echo $media->media_url; ?>"/>
-        </div><?
-        }
         ?><div class="text"><? echo $text; ?></div>
-        <div class="time"><? echo $ts; ?></div>
+        <div class="time"><? echo $t->created_at; ?></div>
     </figure><?
+    $i = 0;
+    while($media = $t->entities->media[$i++])
+    {
+    ?><figure class="tweet hidden">
+        <div class="media">
+            <img src="<? echo $media->media_url; ?>"/>
+        </div>
+        <div class="time"><? echo $t->created_at; ?></div>
+    </figure><?
+    }
 }
 ?></section>

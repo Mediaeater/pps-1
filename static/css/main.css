@@ -19,8 +19,9 @@ body {
 
 header {
     position: fixed;
+    width: 100%;
     z-index: 10;
-    padding: 20px;
+    padding: 40px;
     font-size: 28px;
     text-align: center; 
 }
@@ -38,6 +39,7 @@ header {
 }
 
 .tweet .time {
+    display: none;
     position: fixed;
     bottom: 0px;
     left: 0px;
@@ -53,9 +55,15 @@ header {
     top: 0px;
     left: 0px;
     padding: 20px;
-    padding-top: 68px;
+    padding-top: 100px;
     font-size: 80px;
     line-height: 90px;
+}
+
+#clock-container {
+    position: fixed;
+    bottom: 0;
+    right: 0;
 }
 
 .media {

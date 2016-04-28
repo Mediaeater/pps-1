@@ -1,3 +1,3 @@
 <?
-$title = "creator culture";
+$title = "the other";
 ?><header><? echo strtoupper($title); ?></header>
