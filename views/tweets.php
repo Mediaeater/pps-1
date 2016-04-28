@@ -2,7 +2,6 @@
 require_once("views/tweets-ajax.php");
 require_once("views/clock.php");
 ?>
-<script type="text/javascript" src="static/js/animateMessage.js"></script>
 <script type="text/javascript" src="static/js/tweets.js"></script>
 <script type="text/javascript" src="static/js/tweets-ajax.js"></script>
 <script type="text/javascript">
@@ -12,7 +11,9 @@ require_once("views/clock.php");
     var tweet_interval;
     var ajax_duration = 1000;
     var ajax_interval;
-    var animation_style = "<? echo $type; ?>";
+
+    // $type is defined in head.php
+    var animation_style = "<? echo $type; ?>"; 
     
     // TODO: make this an array
     var info = {}
