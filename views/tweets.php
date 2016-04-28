@@ -45,7 +45,7 @@ require_once("views/clock.php");
         delay: 10,
         use_spans: true,
         class_func: random_classes,
-        anumate_func: random_animate
+        animate_func: random_animate
     }
     init_animation(info[animation_style]);
 </script>

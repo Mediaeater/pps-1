@@ -11,7 +11,6 @@
 // 	globals	
 var timeout;
 var pointer;
-const LETTERS = "abcdefghijklmnopqrstuvwxyz";
 
 function initMessage(sourceId, displayId, animate, delay) 
 {

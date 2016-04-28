@@ -1,3 +1,5 @@
+const LETTERS = "abcdefghijklmnopqrstuvwxyz";
+
 function show_next_tweet()
 {
     // is it bad to increment index here?
