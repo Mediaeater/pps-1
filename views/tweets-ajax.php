@@ -6,7 +6,7 @@ define("DATE_FMT", "Y");
 define("TIME_FMT", "H:i:s");
 
 $stream_id = "custom-723521388947116032";
-$stream_id = "custom-721307714391920640";
+// $stream_id = "custom-721307714391920640";
 $tweeter = new pps_tweeter();
 $data = $tweeter->get_tweets($stream_id);
 

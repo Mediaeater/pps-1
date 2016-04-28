@@ -62,8 +62,17 @@ header {
 
 #clock-container {
     position: fixed;
+    padding: 20px;
     bottom: 0;
     right: 0;
+}
+
+#wyoscan-container {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 20%;
+    padding: 20px;
 }
 
 .media {
