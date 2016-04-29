@@ -68,13 +68,16 @@ document.onkeydown = function(e) {
     switch(e.which || e.keyCode) {
         case 32: // spacebar
             toggle_rotation();
-        break;
+            break;
         case 37: // left
             show_prev_tweet();
-        break;
+            break;
         case 39: // right
             show_next_tweet_a(info[animation_style]);
-        break;
+            break;
+        case 83:
+            strike();
+            break;
         default: return; // exit this handler for other keys
     }
     e.preventDefault();

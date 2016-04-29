@@ -1,6 +1,5 @@
 <?
 require_once("views/tweets-ajax.php");
-require_once("views/clock.php");
 ?>
 <script type="text/javascript" src="static/js/tweets.js"></script>
 <script type="text/javascript" src="static/js/tweets-ajax.js"></script>

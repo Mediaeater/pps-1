@@ -26,7 +26,7 @@ var reverse = true;
 var now = new Date();
 
 var fr = 100; // frame rate
-var speed = 6; // seconds to display one hour
+var speed = 1; // seconds to display one hour
 
 var time = 
 {
@@ -55,13 +55,26 @@ var time =
 // set size variables
 function set_size(width, height)
 {
-    var ccw, cch;
-    ccw = canvas_container.clientWidth;
-    cch = canvas_container.clientHeight;
+    var min;
     
-    width = 200;
-    height = 200;
-    var min = Math.min(width, height);
+    if(pos == "lower-right")
+    {
+        // silly mobile safari bug
+        if(window.innerWidth == 980 && screen.width < 768)
+            width = screen.width * 0.5;
+        else if(window.innerWidth > 768)
+            width = window.innerWidth * 0.2;
+        else
+            width = window.innerWidth * 0.5;
+        height = width;
+    }
+    else
+    {
+        width = window.innerWidth;
+        if (!height)
+            height = window.innerHeight * 0.9;
+    }
+    min = Math.min(width, height);
     r = min * 0.8;
 
     // set the hand lengths
@@ -75,6 +88,14 @@ function set_size(width, height)
     devAdjust = 2.0;
  
     // set the line widths
+    if (pos == "lower-right")
+    {
+        devAdjust = 2.0;
+    }
+    else
+    {
+        devAdjust = 1.0;
+    }
     lineWidths = 
     {
         h: min * 0.015 * devAdjust,
@@ -82,10 +103,10 @@ function set_size(width, height)
         s: min * 0.007 * devAdjust,
         circle: min * 0.015 * devAdjust
     };
-    
+
     // make the canvas not look horrible on retina screens
-    canvas.width = width*2;
-    canvas.height = height*2;
+    canvas.width = width * 2;
+    canvas.height = height * 2;
     canvas.style.width = width.toString().concat('px');
     canvas.style.height = height.toString().concat('px');
     
@@ -100,8 +121,9 @@ function set_size(width, height)
 // canvasId: id of canvas on page
 // a_pos: either "centre" or "lower-right"
 // show_hands: boolean to either show or hide hands initially
-function init_clock(canvasId, a_pos, show_hands)
+function init_clock(canvasId, a_pos, show_hands, rev)
 {
+    reverse = rev;
     canvas = document.getElementById(canvasId);
     canvas_container = canvas.parentElement;
     // context = canvas.getContext('2d');
@@ -149,36 +171,7 @@ function draw_clock()
         }
         else
         {
-            var h, m, s, d;
-            h = time.h;
-            m = time.m;
-            s = time.s;
-        
-            s = (s + time.delta);
-            if (s < 0)
-            {
-
-                if (time.m == 0)
-                    s = 0;
-                else
-                {
-                    m += Math.floor(s / 60);
-                    s += 60;
-                }
-            }
-            if (m < 0)
-            {
-                h += Math.floor(m / 60);
-                m += 60;
-                m = 0;
-            }
-            if (h < 0)
-            {
-                h += 12;
-            }
-            time.h = h;
-            time.m = m;
-            time.s = s;
+            decrement_date();
         }
         d = new Date(1991, 1, 25, time.h, time.m, time.s);
         draw_hands(d);
@@ -187,6 +180,118 @@ function draw_clock()
     {
         draw_hands();
     }
+}
+
+function decrement_date()
+{
+    var h, m, s, d;
+    h = time.h;
+    m = time.m;
+    s = time.s;
+
+    s = (s + time.delta);
+    if (s < 0)
+    {
+        if (time.m == 0)
+            s = 0;
+        else
+        {
+            m += Math.floor(s / 60);
+            s += 60;
+        }
+    }
+    if (m < 0)
+    {
+        h += Math.floor(m / 60);
+        m += 60;
+        m = 0;
+    }
+    if (h < 0)
+    {
+        h += 12;
+    }
+    time.h = h;
+    time.m = m;
+    time.s = s;
+}
+
+function strike_hour()
+{
+    var tweets, header, container;
+    var id, position, hands, reverse;
+    
+    window.clearInterval(handTimer);
+    handTimer = false;
+    
+    time = 
+    {
+        // this is kind of cheating, amiright?
+        h: now.getHours() - 1,
+        m: 59,
+        s: 59,
+        hs: now.getHours(),
+        ms: 0,
+        ss: 0,
+        delta: - (3600 / (fr * speed))
+    }
+       
+    container = document.getElementById("clock-container");
+    container.id = "clock-container-big";
+    tweets = document.getElementById("tweets");
+    header = document.getElementsByTagName("HEADER")[0];
+    tweets.classList.add("hidden");
+    header.classList.add("hidden");
+    
+    
+    id = "clock-canvas";
+    position = "centre";
+    hands = true;
+    reverse = true;
+    
+    init_clock(id, position, hands, reverse);
+}
+
+function unstrike_hour()
+{
+    var tweets, header, container;
+    container = document.getElementById("clock-container-big");
+    container.id = "clock-container";
+    tweets = document.getElementById("tweets");
+    header = document.getElementsByTagName("HEADER")[0];
+    tweets.classList.remove("hidden");
+    header.classList.remove("hidden");
+    
+
+    
+    id = "clock-canvas";
+    position = "lower-right";
+    hands = true;
+    reverse = false;
+    
+    init_clock(id, position, hands, reverse);
+}
+
+function strike()
+{
+    strike_hour();
+    setTimeout(unstrike_hour, speed * 1000 + 5000);
+}
+
+function set_strike()
+{
+    var now, mills;
+    now = new Date();
+    mills = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), 0, 0, 0) - now;
+    if (mills < 0)
+        mills += 3600000;
+    mills = 1000*30;
+    setTimeout(first_strike, 1000*10); 
+}
+
+function first_strike()
+{
+    strike();
+    setInterval(strike, 1000*60*60);
 }
 
 function open_clock()
