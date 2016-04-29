@@ -1,3 +1,4 @@
+var canvas_container;
 var canvas;     // canvas
 var context;    // canvas context
 var width;      // canvas width
@@ -21,25 +22,45 @@ var colours =
 };
 
 var pos = "centre";
+var reverse = true;
+var now = new Date();
 
+var fr = 100; // frame rate
+var speed = 6; // seconds to display one hour
+
+var time = 
+{
+    // this is kind of cheating, amiright?
+    h: now.getHours() - 1,
+    m: 59,
+    s: 59,
+    hs: now.getHours(),
+    ms: 0,
+    ss: 0,
+    delta: - (3600 / (fr * speed))
+}
+
+/*
+var time = 
+{
+    h: now.getHours(),
+    m: now.getMinutes(),
+    s: now.getSeconds(),
+    hs: now.getHours(),
+    ms: now.getMinutes(),
+    ss: now.getSeconds(),
+    delta: -30
+}
+*/
 // set size variables
 function set_size(width, height)
 {
-    if(!width)
-    {
-        if(pos == "lower-right")
-        {
-            // silly mobile safari bug
-            width = 960 * 0.15;
-            height = width;
-        }
-        else
-        {
-            width = window.innerWidth;
-            if (!height)
-                height = window.innerHeight * 0.9;
-        }
-    }
+    var ccw, cch;
+    ccw = canvas_container.clientWidth;
+    cch = canvas_container.clientHeight;
+    
+    width = 200;
+    height = 200;
     var min = Math.min(width, height);
     r = min * 0.8;
 
@@ -82,6 +103,7 @@ function set_size(width, height)
 function init_clock(canvasId, a_pos, show_hands)
 {
     canvas = document.getElementById(canvasId);
+    canvas_container = canvas.parentElement;
     // context = canvas.getContext('2d');
     
     if(a_pos)
@@ -119,7 +141,52 @@ function draw_blank_clock()
 function draw_clock()
 {
     draw_blank_clock();
-    draw_hands();
+    if (reverse)
+    {
+        if (time.m == 0 && time.s == 0)
+        {
+            clearInterval(handTimer);
+        }
+        else
+        {
+            var h, m, s, d;
+            h = time.h;
+            m = time.m;
+            s = time.s;
+        
+            s = (s + time.delta);
+            if (s < 0)
+            {
+
+                if (time.m == 0)
+                    s = 0;
+                else
+                {
+                    m += Math.floor(s / 60);
+                    s += 60;
+                }
+            }
+            if (m < 0)
+            {
+                h += Math.floor(m / 60);
+                m += 60;
+                m = 0;
+            }
+            if (h < 0)
+            {
+                h += 12;
+            }
+            time.h = h;
+            time.m = m;
+            time.s = s;
+        }
+        d = new Date(1991, 1, 25, time.h, time.m, time.s);
+        draw_hands(d);
+    }
+    else
+    {
+        draw_hands();
+    }
 }
 
 function open_clock()
@@ -131,7 +198,7 @@ function open_clock()
             {
                 draw_clock();
             }, 
-            50
+            1000 / fr
         );
 }
 
@@ -187,12 +254,16 @@ function draw_hands(d)
     
     for(k in rad)
     {
-        context.beginPath();
-        context.strokeStyle = colours[k];
-        context.lineWidth = lineWidths[k];
-        context.moveTo(center.x, center.y);
-        context.lineTo( Math.cos(rad[k]) * hands[k] + center.x, 
-                        Math.sin(rad[k]) * hands[k] + center.y);
-        context.stroke();
+        kk = k;
+        if (!(reverse && kk == "s"))
+        {
+            context.beginPath();
+            context.strokeStyle = colours[k];
+            context.lineWidth = lineWidths[k];
+            context.moveTo(center.x, center.y);
+            context.lineTo( Math.cos(rad[k]) * hands[k] + center.x, 
+                            Math.sin(rad[k]) * hands[k] + center.y);
+            context.stroke();
+        }
     }
 }
