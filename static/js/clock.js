@@ -218,7 +218,7 @@ function decrement_date()
 function strike_hour()
 {
     var tweets, header, container;
-    var id, position, hands, reverse;
+    var id, position, hands, reverse, pop;
     
     window.clearInterval(handTimer);
     handTimer = false;
@@ -241,6 +241,10 @@ function strike_hour()
     header = document.getElementsByTagName("HEADER")[0];
     tweets.classList.add("hidden");
     header.classList.add("hidden");
+    pop = document.getElementById("pop");
+    
+    // this loop needs to be a timeout function
+    pop.play();
     
     
     id = "clock-canvas";

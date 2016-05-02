@@ -19,6 +19,9 @@ else
 ?><div id="clock-container">
     <canvas id="clock-canvas"></canvas>
 </div>
+<audio id="pop">
+    <source src="<? echo $host; ?>media/mp3/pop.mp3" type="audio/mpeg">
+</audio>
 <script>
     var id = "clock-canvas";
     var position = "lower-right";
