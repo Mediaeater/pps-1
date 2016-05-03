@@ -46,5 +46,5 @@ require_once("views/tweets-ajax.php");
         class_func: random_classes,
         animate_func: random_animate
     }
-    init_animation(info[animation_style]);
+    init_animation();
 </script>
