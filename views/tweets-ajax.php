@@ -7,11 +7,21 @@ define("TIME_FMT", "H:i:s");
 
 $stream_id = "custom-723521388947116032";
 // $stream_id = "custom-721307714391920640";
-$tweeter = new pps_tweeter();
-$data = $tweeter->get_tweets($stream_id);
+$q_arr = array();
+$q_arr[] = '"police drawing"';
+$q_arr[] = '"police sketch"';
+$q_arr[] = '"help identify"';
+$q_arr[] = '"looking to identify"';
+$q_arr[] = '"identify this person"';
+$q_arr[] = '"help identify this person"';
 
-$timeline = array_reverse($data->response->timeline);
-$tweets = $data->objects->tweets;
+$tweeter = new pps_tweeter();
+// $data = $tweeter->get_tweets($stream_id);
+$data = $tweeter->search_tweets($q_arr);
+
+// $timeline = array_reverse($data->response->timeline);
+// $tweets = $data->objects->tweets;
+$tweets = $data->statuses;
 $users = $data->objects->users;
 
 $tco_pattern = '/https?:\/\/t\.co\/.*/';
@@ -20,9 +30,9 @@ $rquot_pattern = '/(?<=[\w,.?!…\)]|^)"/';
 $lquot_pattern = '/"(?=\w|$)/';
 
 ?><section id="tweets"><?
-foreach($timeline as $l)
+foreach($tweets as $t)
 {
-    $t = $tweets->{$l->tweet->id};
+    // $t = $tweets->{$l->tweet->id};
     
     $text = $t->text;
     // remove t.co links
@@ -40,8 +50,16 @@ foreach($timeline as $l)
     $time = date(TIME_FMT, $dt);
     $ts = $time;
     
-    ?><figure class="animated tweet fadeIn hidden"><?
+    $handle = $t->user->screen_name;
+    
+    ?><figure class="animated tweet fadeIn hidden">
+        <div id="twitter-bird-container">
+            <object data="<? echo $host; ?>media/svg/twitter-bird.svg"></object>
+        </div>
+    </figure>
+    <figure class="animated tweet fadeIn hidden"><?
         ?><div class="text"><? echo $text; ?></div>
+        <div class="user-handle"><? echo $handle; ?></div>
         <div class="time"><? echo $t->created_at; ?></div>
     </figure><?
     $i = 0;
@@ -51,6 +69,7 @@ foreach($timeline as $l)
         <div class="media">
             <img src="<? echo $media->media_url; ?>"/>
         </div>
+        <div class="user-handle"><? echo $handle; ?></div>
         <div class="time"><? echo $t->created_at; ?></div>
     </figure><?
     }

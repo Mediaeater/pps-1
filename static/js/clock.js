@@ -21,7 +21,7 @@ var colours =
     circleopen: '#fff'
 };
 
-var pos = "centre";
+var size = "small";
 var reverse = true;
 var now = new Date();
 
@@ -40,39 +40,22 @@ var time =
     delta: - (3600 / (fr * speed))
 }
 
-/*
-var time = 
-{
-    h: now.getHours(),
-    m: now.getMinutes(),
-    s: now.getSeconds(),
-    hs: now.getHours(),
-    ms: now.getMinutes(),
-    ss: now.getSeconds(),
-    delta: -30
-}
-*/
 // set size variables
 function set_size(width, height)
 {
-    var min;
+    var min, line_width_factor;
     
-    if(pos == "lower-right")
+    if (size == "small")
     {
-        // silly mobile safari bug
-        if(window.innerWidth == 980 && screen.width < 768)
-            width = screen.width * 0.5;
-        else if(window.innerWidth > 768)
-            width = window.innerWidth * 0.2;
-        else
-            width = window.innerWidth * 0.5;
+        width = window.innerWidth * 0.2;
         height = width;
+        line_width_factor = 2.0;
     }
     else
     {
-        width = window.innerWidth;
-        if (!height)
-            height = window.innerHeight * 0.9;
+        width = windo.innerWidth;
+        height = window.innerHeight;
+        line_width_factor = 1.0;
     }
     min = Math.min(width, height);
     r = min * 0.8;
@@ -84,26 +67,19 @@ function set_size(width, height)
         m: r * 0.8,
         s: r * 0.9
     };
-
-    devAdjust = 2.0;
- 
-    // set the line widths
-    if (pos == "lower-right")
-    {
-        devAdjust = 2.0;
-    }
-    else
-    {
-        devAdjust = 1.0;
-    }
+    
     lineWidths = 
     {
-        h: min * 0.015 * devAdjust,
-        m: min * 0.015 * devAdjust,
-        s: min * 0.007 * devAdjust,
-        circle: min * 0.015 * devAdjust
+        h: 0.015,
+        m: 0.015,
+        s: 0.007,
+        circle: 0.015
     };
-
+    
+    Object.keys(lineWidths).forEach(function(key, index) {
+        lineWidths[key] *= (min * line_width_factor);
+    });
+    
     // make the canvas not look horrible on retina screens
     canvas.width = width * 2;
     canvas.height = height * 2;
@@ -121,10 +97,10 @@ function set_size(width, height)
 // canvasId: id of canvas on page
 // a_pos: either "centre" or "lower-right"
 // show_hands: boolean to either show or hide hands initially
-function init_clock(canvasId, a_pos, show_hands, rev)
+function init_clock(canvas_id, a_pos, show_hands, rev)
 {
     reverse = rev;
-    canvas = document.getElementById(canvasId);
+    canvas = document.getElementById(canvas_id);
     canvas_container = canvas.parentElement;
     // context = canvas.getContext('2d');
     
@@ -342,7 +318,8 @@ function draw_circle(colour)
 
 function draw_hands(d)
 {
-    var h, m, s;
+    var h, m, s, rad, k, kk;
+    
     if (d === undefined)
         d = new Date();
         
@@ -350,7 +327,7 @@ function draw_hands(d)
     m = d.getMinutes();
     s = d.getSeconds();
     
-    var rad = 
+    rad = 
     {
         h: (((h % 12) + m / 60.0) / 6.0) * Math.PI - (Math.PI / 2.0),
         m: (m + s / 60.0) / 30.0 * Math.PI - (Math.PI / 2.0),
@@ -358,8 +335,8 @@ function draw_hands(d)
     };
     
     // smooth second hand (uses milliseconds)
-    // var ms = d.getMilliseconds();  
-    // rad.s = (s + ms / 1000.0) / 30.0 * Math.PI - (Math.PI / 2.0);
+//     var ms = d.getMilliseconds();  
+//     rad.s = (s + ms / 1000.0) / 30.0 * Math.PI - (Math.PI / 2.0);
     
     for(k in rad)
     {

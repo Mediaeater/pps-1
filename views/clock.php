@@ -6,10 +6,11 @@ if ($big_clock)
     <canvas id="clock-canvas"></canvas>
 </div>
 <script>
-    var id = "clock-canvas";
-    var position = "centre";
-    var hands = true;
-    var reverse = true;
+    var canvas_id, size, hands, reverse;
+    id = "clock-canvas";
+    position = "centre";
+    hands = true;
+    reverse = true;
     
     init_clock(id, position, hands, reverse);
 </script><?

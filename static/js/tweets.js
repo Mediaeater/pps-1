@@ -220,14 +220,14 @@ function show_invisibles(elements)
 // https://mathiasbynens.be/notes/javascript-unicode
 function split_by_symbol(str)
 {
-    var i, length, output;
+    var i, length, output, charCode;
     i = 0;
     length = str.length;
 	output = [];
 	
 	for (; i < length - 1; ++i) 
 	{
-		var charCode = str.charCodeAt(i);
+		charCode = str.charCodeAt(i);
 		if (charCode >= 0xD800 && charCode <= 0xDBFF)
 		{
 			charCode = str.charCodeAt(i + 1);

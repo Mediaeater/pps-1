@@ -76,6 +76,20 @@ class pps_tweeter
         
         return $result;
     }
+    
+    function search_tweets($q_arr)
+    {
+        $query = implode(" OR ", $q_arr);
+        $query = urlencode($query);
+        
+        $parameters = [
+            'q' => $query
+        ];
+        
+        $result = $this->conn->get("search/tweets", $parameters);
+        
+        return $result;
+    }
 }
 
 ?>
