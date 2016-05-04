@@ -8,6 +8,7 @@ if (!$big_clock)
     require_once("views/title.php");
     require_once("views/tweets.php");
 }
+require_once("views/bird.php");
 require_once("views/clock.php");
 require_once("views/foot.php");
 ?>

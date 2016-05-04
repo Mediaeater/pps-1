@@ -3,10 +3,10 @@ date_default_timezone_set("America/New_York");
 require_once(__DIR__."/../lib/pps_tweeter.php");
 
 define("DATE_FMT", "Y");
-define("TIME_FMT", "H:i:s");
+define("TIME_FMT", "H:i");
 
 $stream_id = "custom-723521388947116032";
-// $stream_id = "custom-721307714391920640";
+
 $q_arr = array();
 $q_arr[] = '"police drawing"';
 $q_arr[] = '"police sketch"';
@@ -16,13 +16,8 @@ $q_arr[] = '"identify this person"';
 $q_arr[] = '"help identify this person"';
 
 $tweeter = new pps_tweeter();
-// $data = $tweeter->get_tweets($stream_id);
 $data = $tweeter->search_tweets($q_arr);
-
-// $timeline = array_reverse($data->response->timeline);
-// $tweets = $data->objects->tweets;
 $tweets = $data->statuses;
-$users = $data->objects->users;
 
 $tco_pattern = '/https?:\/\/t\.co\/.*/';
 $apos_pattern = "/(\w+)'(\w+)/";
@@ -52,15 +47,12 @@ foreach($tweets as $t)
     
     $handle = $t->user->screen_name;
     
-    ?><figure class="animated tweet fadeIn hidden">
-        <div id="twitter-bird-container">
-            <object data="<? echo $host; ?>media/svg/twitter-bird.svg"></object>
-        </div>
-    </figure>
-    <figure class="animated tweet fadeIn hidden"><?
+    ?><figure class="animated tweet fadeIn hidden"><?
         ?><div class="text"><? echo $text; ?></div>
-        <div class="user-handle"><? echo $handle; ?></div>
-        <div class="time"><? echo $t->created_at; ?></div>
+        <div class="metadata">
+            <span class="user-handle"><? echo $handle; ?></span>
+            <span class="time"><? echo $ts; ?></span>
+        </div>
     </figure><?
     $i = 0;
     while($media = $t->entities->media[$i++])
@@ -69,8 +61,10 @@ foreach($tweets as $t)
         <div class="media">
             <img src="<? echo $media->media_url; ?>"/>
         </div>
-        <div class="user-handle"><? echo $handle; ?></div>
-        <div class="time"><? echo $t->created_at; ?></div>
+        <div class="metadata">
+            <span class="user-handle"><? echo $handle; ?></span>
+            <span class="time"><? echo $ts; ?></span>
+        </div>
     </figure><?
     }
 }

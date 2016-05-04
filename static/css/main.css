@@ -24,6 +24,7 @@ header {
     padding: 40px;
     font-size: 28px;
     text-align: center; 
+    -webkit-font-smoothing: subpixel-antialiased;
 }
 
 .tweet {
@@ -39,12 +40,7 @@ header {
 }
 
 .tweet .time {
-    display: none;
-    position: fixed;
-    bottom: 0px;
-    left: 0px;
-    padding: 20px;
-    
+    padding-left: 10px;
     font-family: "Andale Mono";
     font-size: 14px;
 }
@@ -74,20 +70,11 @@ header {
     transform: translate(-50%, -50%);
 }
 
-#wyoscan-container {
+#twitter-bird-container {
+    width: 10vw;
     position: fixed;
     bottom: 0;
-    right: 0;
-    width: 20%;
-    padding: 20px;
-}
-
-#twitter-bird-container {
-    width: 20vw;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%)
+    left: 0;
 }
 
 .user-handle::before {
@@ -95,10 +82,13 @@ header {
 }
 .user-handle {
     font-size: 28px;
+}
+
+.metadata {
     padding: 20px;
     position: fixed;
     bottom: 0;
-    left: 0;
+    left: 7vw;
 }
 .media {
     width: 100%;
