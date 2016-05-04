@@ -24,6 +24,8 @@ $apos_pattern = "/(\w+)'(\w+)/";
 $rquot_pattern = '/(?<=[\w,.?!…\)]|^)"/';
 $lquot_pattern = '/"(?=\w|$)/';
 
+$timestamps = array();
+
 ?><section id="tweets"><?
 foreach($tweets as $t)
 {
@@ -45,6 +47,8 @@ foreach($tweets as $t)
     $time = date(TIME_FMT, $dt);
     $ts = $time;
     
+    $timestamps[] = $t->created_at;
+    
     $handle = $t->user->screen_name;
     
     ?><figure class="animated tweet fadeIn hidden"><?
@@ -57,6 +61,7 @@ foreach($tweets as $t)
     $i = 0;
     while($media = $t->entities->media[$i++])
     {
+        $timestamps[] = $t->created_at;
     ?><figure class="animated tweet fadeIn hidden">
         <div class="media">
             <img src="<? echo $media->media_url; ?>"/>
@@ -69,3 +74,10 @@ foreach($tweets as $t)
     }
 }
 ?></section>
+<script>
+    var dtstrings = <? echo json_encode($timestamps); ?>;
+    var dts = [];
+    for (var i = 0; i < dtstrings.length; i++) {
+        dts.push(new Date(dtstrings[i]));
+    }
+</script>

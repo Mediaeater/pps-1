@@ -108,7 +108,10 @@ function init_clock(canvas_id, a_pos, show_hands, rev)
         pos = a_pos;
     
     if(show_hands)
-        open_clock();
+    {
+        // open_clock();
+        // draw_clock();
+    }
     else
     {
         draw_blank_clock();
@@ -136,7 +139,7 @@ function draw_blank_clock()
     draw_circle();
 }
 
-function draw_clock()
+function draw_clock(d)
 {
     draw_blank_clock();
     if (reverse)
@@ -149,12 +152,11 @@ function draw_clock()
         {
             decrement_date();
         }
-        d = new Date(1991, 1, 25, time.h, time.m, time.s);
         draw_hands(d);
     }
     else
     {
-        draw_hands();
+        draw_hands(d);
     }
 }
 
@@ -337,7 +339,7 @@ function draw_hands(d)
     // smooth second hand (uses milliseconds)
 //     var ms = d.getMilliseconds();  
 //     rad.s = (s + ms / 1000.0) / 30.0 * Math.PI - (Math.PI / 2.0);
-    
+//     
     for(k in rad)
     {
         kk = k;
