@@ -6,13 +6,18 @@ if ($big_clock)
     <canvas id="clock-canvas"></canvas>
 </div>
 <script>
-    var canvas_id, size, hands, reverse;
-    id = "clock-canvas";
-    position = "centre";
-    hands = true;
-    reverse = true;
-    
-    init_clock(id, position, hands, reverse);
+    var canvas_id, size, colours;
+    canvas_id = "clock-canvas";
+    size = "large";
+    colours = {};
+    colours.bg = 'rgba(255, 255, 255, 0.0)';
+    colours.h = '#FF5722';
+    colours.m = '#FF5722';
+    colours.s = '#FF5722';
+    colours.circle = '#FF5722';
+    colours.circleopen = '#FF5722';
+        
+    init_clock(canvas_id);
 </script><?
 }
 else
@@ -24,11 +29,17 @@ else
     <source src="<? echo $host; ?>media/mp3/pop.mp3" type="audio/mpeg">
 </audio>
 <script>
-    var id = "clock-canvas";
-    var position = "lower-right";
-    var hands = true;
-    var reverse = false;
-    
-    init_clock(id, position, hands, reverse);
+    var canvas_id, size, colours;
+    canvas_id = "clock-canvas";
+    size = "small";
+    colours = {};
+    colours.bg = 'rgba(255, 255, 255, 0.0)';
+    colours.h = '#FFF';
+    colours.m = '#FFF';
+    colours.s = '#FFF';
+    colours.circle = '#FFF';
+    colours.circleopen = '#FFF';
+
+    init_clock(canvas_id);
 </script><?
 }

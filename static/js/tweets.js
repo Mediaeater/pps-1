@@ -51,7 +51,7 @@ function show_tweet(index)
         ti = 0;
         anim.animate_func(text, anim.delay);
     }
-    draw_clock(dts[index]);
+    // draw_clock(dts[index]);
 }
 
 // this should really be renamed

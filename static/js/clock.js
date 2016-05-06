@@ -1,44 +1,25 @@
-var canvas_container;
+const SMOOTH_SECOND_HAND = false;
+
+// DOM elements
 var canvas;     // canvas
 var context;    // canvas context
-var width;      // canvas width
-var height;     // canvas height
+
+// integers
+// var width;      // canvas width
+// var height;     // canvas height
 var r;          // clock radius
 
-var center = new Array();   // center coordinates
-var hands = new Array();    // hand info
-var lineWidths = new Array(); 
-var handTimer;
+// arrays (objects)
+var center = {};
+var time = {};
+var hand_lengths;
+var hand_widths;
 
-// colour info
-var colours = 
-{
-    bg: 'rgba(255, 255, 255, 0.0)',
-    h: '#fff',
-    m: '#fff',
-    s: '#fff',
-    circle: '#fff',
-    circleopen: '#fff'
-};
+// timer variables;
+var hand_timer;
 
-var size = "small";
-var reverse = true;
-var now = new Date();
-
-var fr = 100; // frame rate
-var speed = 1; // seconds to display one hour
-
-var time = 
-{
-    // this is kind of cheating, amiright?
-    h: now.getHours() - 1,
-    m: 59,
-    s: 59,
-    hs: now.getHours(),
-    ms: 0,
-    ss: 0,
-    delta: - (3600 / (fr * speed))
-}
+// booleans
+var show_hands;
 
 // set size variables
 function set_size(width, height)
@@ -53,113 +34,166 @@ function set_size(width, height)
     }
     else
     {
-        width = windo.innerWidth;
+        width = window.innerWidth;
         height = window.innerHeight;
         line_width_factor = 1.0;
     }
     min = Math.min(width, height);
     r = min * 0.8;
-
-    // set the hand lengths
-    hands = 
-    {
-        h: r * 0.5,
-        m: r * 0.8,
-        s: r * 0.9
-    };
     
-    lineWidths = 
+    hand_widths = 
     {
         h: 0.015,
         m: 0.015,
         s: 0.007,
         circle: 0.015
     };
-    
-    Object.keys(lineWidths).forEach(function(key, index) {
-        lineWidths[key] *= (min * line_width_factor);
+    hand_lengths = 
+    {
+        h: 0.5,
+        m: 0.8,
+        s: 0.9
+    };
+
+    // set the hand lengths
+    Object.keys(hand_lengths).forEach(function(key, index) {
+        hand_lengths[key] *= r;
+    });
+
+    // adjust hand_widths based on size
+    Object.keys(hand_widths).forEach(function(key, index) {
+        hand_widths[key] *= (min * line_width_factor);
     });
     
-    // make the canvas not look horrible on retina screens
-    canvas.width = width * 2;
-    canvas.height = height * 2;
-    canvas.style.width = width.toString().concat('px');
-    canvas.style.height = height.toString().concat('px');
-    
     // set the center x and y coordinates
-    center = 
-    {
-        x: width,
-        y: height
-    };
+    center.x = width;
+    center.y = height;
+    
+    return;
 }
 
 // canvasId: id of canvas on page
 // a_pos: either "centre" or "lower-right"
-// show_hands: boolean to either show or hide hands initially
-function init_clock(canvas_id, a_pos, show_hands, rev)
+function init_clock(canvas_id)
 {
-    reverse = rev;
     canvas = document.getElementById(canvas_id);
-    canvas_container = canvas.parentElement;
-    // context = canvas.getContext('2d');
+    context = canvas.getContext('2d');
     
-    if(a_pos)
-        pos = a_pos;
+    set_size();
+    open_clock();
     
-    if(show_hands)
-    {
-        // open_clock();
-        // draw_clock();
-    }
-    else
-    {
-        draw_blank_clock();
-    }
     window.onresize = function(event) 
     {
-        // draw_blank_clock();   
-        if(handTimer)
-            draw_clock();
-        else
-            draw_blank_clock();
+        set_size();
+        draw();
     };  
 }
 
-function set_time(canvasId, a_pos, d)
+function open_clock()
 {
-    draw_blank_clock();
-    draw_hands(d);
+    show_hands = true;
+    hand_timer = window.setInterval(draw, 1000 / fr);
 }
 
-function draw_blank_clock()
+function close_clock()
 {
-    set_size();
+    window.clearInterval(hand_timer);
+    hand_timer = null;
+    show_hands = false;
+    draw();
+}
+
+// given a date, d, draw hand_lengths at time d
+// if no date given, then use now
+function draw(d)
+{
     fill_bg();
     draw_circle();
+    
+    if (show_hands)
+    {
+        update_time(d);
+        draw_hands();
+    }
 }
 
-function draw_clock(d)
+function fill_bg()
 {
-    draw_blank_clock();
-    if (reverse)
-    {
-        if (time.m == 0 && time.s == 0)
-        {
-            clearInterval(handTimer);
-        }
-        else
-        {
-            decrement_date();
-        }
-        draw_hands(d);
-    }
+    // make the canvas not look horrible on retina screens
+    // for some reason this has to be called on every loop?
+    // it needs to be called in every loop if the background is at
+    // all transparent. it appears to reset the canvas.
+    canvas.width = center.x * 2;
+    canvas.height = center.y * 2;
+    canvas.style.width = center.x.toString().concat('px');
+    canvas.style.height = center.y.toString().concat('px');
+    
+    context.strokeStyle = colours.bg;
+    context.fillStyle = colours.bg;
+    context.fillRect(0, 0, center.x*2, center.y*2);
+}
+
+function draw_circle()
+{
+    context.strokeStyle = colours.circle;
+    context.lineCap = 'round';
+    context.lineWidth = hand_widths.circle;
+    context.beginPath();
+    context.arc(center.x, center.y, r, 0, 2 * Math.PI);
+    context.stroke();
+}
+
+function update_time(d)
+{
+    if (d === undefined)
+        d = new Date();
+
+    time.h = d.getHours();
+    time.m = d.getMinutes();
+    time.s = d.getSeconds();
+    time.ms = d.getMilliseconds();
+}
+
+function draw_hands()
+{
+    var rad, k, x, y;
+
+    // get angles for each hand (hours, minutes, seconds)
+    rad = {};
+    rad.h = (((time.h % 12) + time.m / 60.0) / 6.0);
+    rad.m = (time.m + time.s / 60.0) / 30.0;
+    // smooth second hand (uses milliseconds)
+    if (SMOOTH_SECOND_HAND)
+        rad.s = (time.s + time.ms / 1000.0) / 30.0;
     else
+        rad.s = time.s / 30.0;
+
+    // adjust hand angles
+    Object.keys(rad).forEach(function(key, index) {
+        rad[key] *= Math.PI;
+        rad[key] -= Math.PI / 2.0;
+    });
+
+    // draw hands on canvas
+    for(k in rad)
     {
-        draw_hands(d);
+        context.beginPath();
+        context.strokeStyle = colours[k];
+        context.lineWidth = hand_widths[k];
+        context.moveTo(center.x, center.y);
+        x = Math.cos(rad[k]) * hand_lengths[k] + center.x;
+        y = Math.sin(rad[k]) * hand_lengths[k] + center.y;
+        context.lineTo(x, y);
+        context.stroke();
     }
 }
 
+// reverse stuff
+var now = new Date();
+var fr = 100; // frame rate
+var speed = 1; // seconds to display one hour
+
+// rewind stuff
 function decrement_date()
 {
     var h, m, s, d;
@@ -196,10 +230,10 @@ function decrement_date()
 function strike_hour()
 {
     var tweets, header, container;
-    var id, position, hands, reverse, pop;
+    var id, position, hand_lengths, reverse, pop;
     
-    window.clearInterval(handTimer);
-    handTimer = false;
+    window.clearInterval(hand_timer);
+    hand_timer = false;
     
     time = 
     {
@@ -224,13 +258,12 @@ function strike_hour()
     // this loop needs to be a timeout function
     pop.play();
     
-    
     id = "clock-canvas";
     position = "centre";
-    hands = true;
+    hand_lengths = true;
     reverse = true;
     
-    init_clock(id, position, hands, reverse);
+    init_clock(id, position, hand_lengths, reverse);
 }
 
 function unstrike_hour()
@@ -247,10 +280,10 @@ function unstrike_hour()
     
     id = "clock-canvas";
     position = "lower-right";
-    hands = true;
+    hand_lengths = true;
     reverse = false;
     
-    init_clock(id, position, hands, reverse);
+    init_clock(id, position, hand_lengths, reverse);
 }
 
 function strike()
@@ -274,84 +307,4 @@ function first_strike()
 {
     strike();
     setInterval(strike, 1000*60*60);
-}
-
-function open_clock()
-{
-    handTimer = 
-        window.setInterval
-        (
-            function() 
-            {
-                draw_clock();
-            }, 
-            1000 / fr
-        );
-}
-
-function close_clock()
-{
-    window.clearInterval(handTimer);
-    handTimer = false;
-    draw_blank_clock();
-}
-
-function fill_bg(fill_colour)
-{
-    context = canvas.getContext('2d');
-    context.strokeStyle = colours.bg;
-    context.fillStyle = colours.bg;
-    context.fillRect(0, 0, center.x*2, center.y*2);
-}
-
-function draw_circle(colour)
-{
-    if (colour) 
-        context.strokeStyle = colour;
-    else
-        context.strokeStyle = colours.circle;
-    
-    context.lineCap = 'round';
-    context.lineWidth = lineWidths.circle;
-    context.beginPath();
-    context.arc(center.x, center.y, r, 0, 2*Math.PI);
-    context.stroke();
-}
-
-function draw_hands(d)
-{
-    var h, m, s, rad, k, kk;
-    
-    if (d === undefined)
-        d = new Date();
-        
-    h = d.getHours();
-    m = d.getMinutes();
-    s = d.getSeconds();
-    
-    rad = 
-    {
-        h: (((h % 12) + m / 60.0) / 6.0) * Math.PI - (Math.PI / 2.0),
-        m: (m + s / 60.0) / 30.0 * Math.PI - (Math.PI / 2.0),
-        s: s / 30.0 * Math.PI - (Math.PI / 2.0)
-    };
-    
-    // smooth second hand (uses milliseconds)
-//     var ms = d.getMilliseconds();  
-//     rad.s = (s + ms / 1000.0) / 30.0 * Math.PI - (Math.PI / 2.0);
-//     
-    for(k in rad)
-    {
-        kk = k;
-        if (!(reverse && kk == "s"))
-        {
-            context.beginPath();
-            context.strokeStyle = colours[k];
-            context.lineWidth = lineWidths[k];
-            context.moveTo(center.x, center.y);
-            context.lineTo( Math.cos(rad[k]) * hands[k] + center.x, 
-                            Math.sin(rad[k]) * hands[k] + center.y);
-            context.stroke();
-        }
-    }
 }
