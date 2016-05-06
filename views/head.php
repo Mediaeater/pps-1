@@ -25,7 +25,7 @@ $name = strip_tags($item["name1"]);
 $item = $oo->get($uu->id);
 $title = $item["name1"] ? $item["name1"] : "PPS";
 
-$type = "in-order";
+$type = "fade-in-out";
 if (!$type)
     $type = "plain";
 ?><!DOCTYPE html>
@@ -35,11 +35,11 @@ if (!$type)
         <meta charset="UTF-8">
         <link rel="stylesheet" type="text/css" media="all" href="static/css/main.css">
         <link rel="stylesheet" type="text/css" media="all" href="static/css/animations.css"><?
-        if($uri[2] == "fade-in" || $uri[2] == "fade-in-out")
+        if($type == "fade-in" || $type == "fade-in-out")
         {
         ?><link rel="stylesheet" type="text/css" media="all" href="static/css/fade-in.css"><?
         }
-        if($uri[2] == "fade-in-out")
+        if($type == "fade-in-out")
         {
         ?><link rel="stylesheet" type="text/css" media="all" href="static/css/fade-in-out.css"><?
         }

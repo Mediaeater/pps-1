@@ -44,6 +44,8 @@ foreach($tweets as $t)
     
     $handle = $t->user->screen_name;
     
+    if ($item['url'] != 'computer-vision-exhibitionist')
+    {
     ?><figure class="animated tweet fadeIn hidden"><?
         ?><div class="text"><? echo $text; ?></div>
         <div class="metadata">
@@ -51,6 +53,7 @@ foreach($tweets as $t)
             <span class="time"><? echo $ts; ?></span>
         </div>
     </figure><?
+    }
     $i = 0;
     while($media = $t->entities->media[$i++])
     {
