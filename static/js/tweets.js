@@ -280,8 +280,11 @@ document.onkeydown = function(e) {
         case 39: // right
             show_next_tweet();
             break;
-        case 83:
+        case 83: // S
             strike();
+            break;
+        case 85:
+            unstrike();
             break;
         default: return; // exit this handler for other keys
     }

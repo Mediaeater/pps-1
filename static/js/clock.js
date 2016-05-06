@@ -18,6 +18,9 @@ var hand_timer;
 
 // booleans
 var show_hands;
+var reverse = false;
+
+var fr = 100; // frame rate
 
 // set size variables
 function set_size(width, height)
@@ -79,6 +82,7 @@ function init_clock(canvas_id)
     
     set_size();
     open_clock();
+    update_time();
     
     window.onresize = function(event) 
     {
@@ -105,12 +109,27 @@ function close_clock()
 // if no date given, then use now
 function draw(d)
 {
+    var del, total;
+    total = 5;
+    del = -3600 / (fr * total);
+    if (reverse && d == undefined)
+        d = reverse_time(time, del);
+    
     fill_bg();
     draw_circle();
     
     if (show_hands)
     {
         update_time(d);
+        now = new Date();
+        m = now.getMinutes();
+        s = now.getSeconds();
+        ms = now.getMilliseconds();
+
+        if (m % 5 == 4 && (s < total || (s == total && ms < 50)))
+            reverse = true;
+        else
+            reverse = false;
         draw_hands();
     }
 }
@@ -175,56 +194,50 @@ function draw_hands()
     // draw hands on canvas
     for(k in rad)
     {
-        context.beginPath();
-        context.strokeStyle = colours[k];
-        context.lineWidth = hand_widths[k];
-        context.moveTo(center.x, center.y);
-        x = Math.cos(rad[k]) * hand_lengths[k] + center.x;
-        y = Math.sin(rad[k]) * hand_lengths[k] + center.y;
-        context.lineTo(x, y);
-        context.stroke();
+        if (!(reverse && k == "s"))
+        {
+            context.beginPath();
+            context.strokeStyle = colours[k];
+            context.lineWidth = hand_widths[k];
+            context.moveTo(center.x, center.y);
+            x = Math.cos(rad[k]) * hand_lengths[k] + center.x;
+            y = Math.sin(rad[k]) * hand_lengths[k] + center.y;
+            context.lineTo(x, y);
+            context.stroke();
+        }
     }
 }
 
 // reverse stuff
 var now = new Date();
-var fr = 100; // frame rate
-var speed = 1; // seconds to display one hour
 
+var speed = 1; // seconds to display one hour
+var delta = -30; 
 // rewind stuff
-function decrement_date()
+
+function reverse_time(time, delta)
 {
     var h, m, s, d;
-    h = time.h;
-    m = time.m;
-    s = time.s;
 
-    s = (s + time.delta);
-    if (s < 0)
+    time.s = (time.s + delta);
+    if (time.s < 0)
     {
-        if (time.m == 0)
-            s = 0;
-        else
-        {
-            m += Math.floor(s / 60);
-            s += 60;
-        }
+        time.m += Math.floor(time.s / 60);
+        time.s += 60;
     }
-    if (m < 0)
+    if (time.m < 0)
     {
-        h += Math.floor(m / 60);
-        m += 60;
-        m = 0;
+        time.h += Math.floor(time.m / 60);
+        time.m += 60;
+        // time.m = 0;
     }
-    if (h < 0)
-    {
-        h += 12;
-    }
-    time.h = h;
-    time.m = m;
-    time.s = s;
+    if (time.h < 0)
+        time.h += 12;
+    
+    return new Date(1991, 01, 25, time.h, time.m, time.s);
 }
 
+/*
 function strike_hour()
 {
     var tweets, header, container;
@@ -287,7 +300,17 @@ function strike()
     strike_hour();
     setTimeout(unstrike_hour, speed * 1000 + 5000);
 }
+*/
 
+function strike()
+{
+    reverse = true;
+}
+
+function unstrike()
+{
+    reverse = false;
+}
 function set_strike()
 {
     var now, mills;
