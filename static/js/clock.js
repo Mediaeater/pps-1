@@ -5,8 +5,6 @@ var canvas;     // canvas
 var context;    // canvas context
 
 // integers
-// var width;      // canvas width
-// var height;     // canvas height
 var r;          // clock radius
 
 // arrays (objects)
@@ -139,7 +137,7 @@ function draw_circle()
     context.lineCap = 'round';
     context.lineWidth = hand_widths.circle;
     context.beginPath();
-    context.arc(center.x, center.y, r, 0, 2 * Math.PI);
+    context.arc(center.x, center.y, r, 0, 2* Math.PI);
     context.stroke();
 }
 
@@ -276,8 +274,6 @@ function unstrike_hour()
     tweets.classList.remove("hidden");
     header.classList.remove("hidden");
     
-
-    
     id = "clock-canvas";
     position = "lower-right";
     hand_lengths = true;
@@ -296,10 +292,13 @@ function set_strike()
 {
     var now, mills;
     now = new Date();
-    mills = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), 0, 0, 0) - now;
-    if (mills < 0)
-        mills += 3600000;
-    mills = 1000*30;
+    ms = new Date(  now.getFullYear(), 
+                    now.getMonth(), 
+                    now.getDate(), 
+                    now.getHours(), 0, 0, 0) - now;
+    if (ms < 0)
+        ms += 3600000;
+    ms = 1000*30;
     setTimeout(first_strike, 1000*10); 
 }
 

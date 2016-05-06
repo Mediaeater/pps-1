@@ -5,21 +5,14 @@ require_once(__DIR__."/../lib/pps_tweeter.php");
 define("DATE_FMT", "Y");
 define("TIME_FMT", "H:i");
 
-$stream_id = "custom-723521388947116032";
-
-$q_arr = array();
-$q_arr[] = '"police drawing"';
-$q_arr[] = '"police sketch"';
-$q_arr[] = '"help identify"';
-$q_arr[] = '"looking to identify"';
-$q_arr[] = '"identify this person"';
-$q_arr[] = '"help identify this person"';
+$q = $item["deck"];
 
 $tweeter = new pps_tweeter();
-$data = $tweeter->search_tweets($q_arr);
+$data = $tweeter->search_tweets($q);
+// echo strlen(urlencode($q));
 $tweets = $data->statuses;
 
-$tco_pattern = '/https?:\/\/t\.co\/.*/';
+$tco_pattern = '/https?:\/\/t\.c.*/';
 $apos_pattern = "/(\w+)'(\w+)/";
 $rquot_pattern = '/(?<=[\w,.?!…\)]|^)"/';
 $lquot_pattern = '/"(?=\w|$)/';

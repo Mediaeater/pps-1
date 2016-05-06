@@ -77,9 +77,8 @@ class pps_tweeter
         return $result;
     }
     
-    function search_tweets($q_arr)
+    function search_tweets($query)
     {
-        $query = implode(" OR ", $q_arr);
         $query = urlencode($query);
         
         $parameters = [
