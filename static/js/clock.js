@@ -91,10 +91,22 @@ function init_clock(canvas_id)
     };  
 }
 
-function open_clock()
+var st, et;
+var total = 2;
+var del = -3600 / (fr * total);
+
+function open_clock(starttime, endtime)
 {
     show_hands = true;
-    hand_timer = window.setInterval(draw, 1000 / fr);
+
+    if (starttime !== undefined && endtime !== undefined)
+    {
+        st = starttime;
+        et = endtime;
+        hand_timer = window.setInterval(draw_reverse, 1000 / fr);
+    }
+    else
+        hand_timer = window.setInterval(draw, 1000 / fr);
 }
 
 function close_clock()
@@ -104,16 +116,14 @@ function close_clock()
     show_hands = false;
     draw();
 }
+var xyzed = true;
+var xyned = true;
 
 // given a date, d, draw hand_lengths at time d
 // if no date given, then use now
 function draw(d)
 {
-    var del, total;
-    total = 5;
-    del = -3600 / (fr * total);
-    if (reverse && d == undefined)
-        d = reverse_time(time, del);
+    var d1, d2;
     
     fill_bg();
     draw_circle();
@@ -121,19 +131,61 @@ function draw(d)
     if (show_hands)
     {
         update_time(d);
-        now = new Date();
-        m = now.getMinutes();
-        s = now.getSeconds();
-        ms = now.getMilliseconds();
-
-        if (m % 5 == 4 && (s < total || (s == total && ms < 50)))
-            reverse = true;
-        else
-            reverse = false;
         draw_hands();
+        
+        if (time.m % 60 == 0 && xyned)
+        {
+            d1 = new Date();
+            d2 = new Date(d1.getTime() - 60 * 60 * 1000);
+            close_clock();
+            document.getElementById("clock-container").classList.add("large");
+            size = "large";
+            set_size();
+            open_clock(d1, d2);
+            xyned = false;
+        }
+        else if (time.m % 60 != 0)
+            xyned = true;
     }
 }
 
+
+
+function draw_reverse()
+{
+    var eh, em, es;
+    
+    fill_bg();
+    draw_circle();
+    
+    if (show_hands)
+    {
+        if (xyzed)
+        {
+            update_time(st);
+            xyzed = false;
+        }   
+        d = reverse_time(time, del);
+        update_time(d);
+        draw_hands();
+        
+        eh = et.getHours();
+        em = et.getMinutes();
+        es = et.getSeconds();
+        
+        if (time.h == eh && time.m <= em)
+        {
+            close_clock();
+            document.getElementById("clock-container").classList.remove("large");
+            size = "small";
+            set_size();
+            open_clock();
+            st = undefined;
+            et = undefined;
+            xyzed = true;
+        }
+    }
+}
 function fill_bg()
 {
     // make the canvas not look horrible on retina screens
@@ -194,7 +246,7 @@ function draw_hands()
     // draw hands on canvas
     for(k in rad)
     {
-        if (!(reverse && k == "s"))
+        if (!(et !== undefined && k == "s"))
         {
             context.beginPath();
             context.strokeStyle = colours[k];
