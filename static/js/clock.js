@@ -133,7 +133,7 @@ function draw(d)
         update_time(d);
         draw_hands();
         
-        if (time.m % 60 == 0 && xyned)
+        if (time.m % 5 == 0 && xyned)
         {
             d1 = new Date();
             d2 = new Date(d1.getTime() - 60 * 60 * 1000);
@@ -144,7 +144,7 @@ function draw(d)
             open_clock(d1, d2);
             xyned = false;
         }
-        else if (time.m % 60 != 0)
+        else if (time.m % 5 != 1)
             xyned = true;
     }
 }
