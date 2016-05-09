@@ -144,7 +144,7 @@ function draw(d)
             open_clock(d1, d2);
             xyned = false;
         }
-        else if (time.m % 5 != 1)
+        else if (time.m % 5 != 0)
             xyned = true;
     }
 }
