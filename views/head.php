@@ -6,6 +6,9 @@ require_once($config);
 // specific to this 'app'
 $config_dir = $root."config/";
 require_once($config_dir."url.php");
+require_once($config_dir."request.php");
+
+require_once("lib/lib.php");
 
 $db = db_connect("guest");
 
@@ -13,6 +16,7 @@ $oo = new Objects();
 $mm = new Media();
 $ww = new Wires();
 $uu = new URL();
+$rr = new Request();
 
 // self
 if($uu->id)
@@ -25,9 +29,19 @@ $name = strip_tags($item["name1"]);
 $item = $oo->get($uu->id);
 $title = $item["name1"] ? $item["name1"] : "PPS";
 
-$type = "fade-in-out";
-if (!$type)
-    $type = "plain";
+if ($rr->type)
+{
+    set_cookie("type", $rr->type);
+}
+else
+{
+    $rr->type = get_cookie("type");
+}
+
+$type = $rr->type;
+if ($type == null)
+    $type = "fade-in-out";
+
 ?><!DOCTYPE html>
 <html>
     <head>

@@ -16,9 +16,9 @@ RewriteRule ^ %1 [L,R=301]
 
 # remove .php
 # RewriteCond %{REQUEST_FILENAME}.php -f
-# RewriteRule !.*\.php$ %{REQUEST_FILENAME}.php [L]
+# RewriteRule !.*\.php$ %{REQUEST_FILENAME}.php [L,QSA]
 
 # direct everything to index.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^.*$ index.php [L]
+RewriteRule ^.*$ index.php [L,QSA]
