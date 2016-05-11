@@ -50,7 +50,7 @@ foreach($tweets as $t)
         ?><div class="text"><? echo $text; ?></div>
         <div class="metadata">
             <span class="user-handle"><? echo $handle; ?></span>
-            <span class="time"><? echo $ts; ?></span>
+            <!-- span class="time"><? echo $ts; ?></span -->
         </div>
     </figure><?
     }
@@ -64,7 +64,7 @@ foreach($tweets as $t)
         </div>
         <div class="metadata">
             <span class="user-handle"><? echo $handle; ?></span>
-            <span class="time"><? echo $ts; ?></span>
+             <!-- span class="time"><? echo $ts; ?></span -->
         </div>
     </figure><?
     }
