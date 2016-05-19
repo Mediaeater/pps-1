@@ -21,6 +21,8 @@ var show_hands;
 var reverse = false;
 
 var fr = 100; // frame rate
+var pop;
+var synth, vco, vca;
 
 // set size variables
 function set_size(width, height)
@@ -79,6 +81,20 @@ function init_clock(canvas_id)
 {
     canvas = document.getElementById(canvas_id);
     context = canvas.getContext('2d');
+    pop = document.getElementById("pop");
+    
+    synth = new AudioContext();
+    
+    vco = synth.createOscillator();
+    vco.type = vco.SINE;
+    vco.frequency.value = 440;
+    vco.start(0);
+    
+    vca = synth.createGain();
+    vca.gain.value = 0;
+    
+    vco.connect(vca);
+    vca.connect(synth.destination);
     
     set_size();
     open_clock();
@@ -103,6 +119,8 @@ function open_clock(starttime, endtime)
     {
         st = starttime;
         et = endtime;
+        pop.play();
+        vca.gain.value = 1;
         hand_timer = window.setInterval(draw_reverse, 1000 / fr);
     }
     else
@@ -183,6 +201,7 @@ function draw_reverse()
             st = undefined;
             et = undefined;
             xyzed = true;
+            vca.gain.value = 0;
         }
     }
 }

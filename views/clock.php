@@ -5,6 +5,9 @@ if ($big_clock)
 ?><div id="clock-container-big">
     <canvas id="clock-canvas"></canvas>
 </div>
+<audio id="pop">
+    <source src="<? echo $host; ?>media/mp3/pop.mp3" type="audio/mpeg">
+</audio>
 <script>
     var canvas_id, size, colours;
     canvas_id = "clock-canvas";
