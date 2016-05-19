@@ -81,8 +81,9 @@ function init_clock(canvas_id)
 {
     canvas = document.getElementById(canvas_id);
     context = canvas.getContext('2d');
-    pop = document.getElementById("pop");
+    pop = document.getElementById("ding");
     
+    /*
     synth = new AudioContext();
     
     vco = synth.createOscillator();
@@ -95,7 +96,7 @@ function init_clock(canvas_id)
     
     vco.connect(vca);
     vca.connect(synth.destination);
-    
+    */
     set_size();
     open_clock();
     update_time();
@@ -120,7 +121,7 @@ function open_clock(starttime, endtime)
         st = starttime;
         et = endtime;
         pop.play();
-        vca.gain.value = 1;
+        /*vca.gain.value = 1;*/
         hand_timer = window.setInterval(draw_reverse, 1000 / fr);
     }
     else
@@ -201,7 +202,7 @@ function draw_reverse()
             st = undefined;
             et = undefined;
             xyzed = true;
-            vca.gain.value = 0;
+            /*vca.gain.value = 0;*/
         }
     }
 }
