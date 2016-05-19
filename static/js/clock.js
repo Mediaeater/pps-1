@@ -195,6 +195,10 @@ function draw_reverse()
         if (time.h == eh && time.m <= em)
         {
             close_clock();
+            set_size();
+            update_time(d);
+            draw_hands();
+            setTimeout(function() {
             document.getElementById("clock-container").classList.remove("large");
             size = "small";
             set_size();
@@ -202,6 +206,7 @@ function draw_reverse()
             st = undefined;
             et = undefined;
             xyzed = true;
+            }, 1500);
             /*vca.gain.value = 0;*/
         }
     }
